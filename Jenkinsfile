@@ -25,7 +25,7 @@ pipeline{
                 sh "docker build . -t kd31967/webapp:${DOCKER_TAG} "
             }
         }
-        
+        // docker hub plugin install and set the password in for docker repository in jenkins credential
         stage('DockerHub Push'){
             steps{
                 withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
