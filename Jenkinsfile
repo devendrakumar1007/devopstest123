@@ -34,7 +34,7 @@ pipeline{
                         [
                             artifactId: 'dockeransible', 
                             classifier: '', 
-                            file: "target/dockeransible-1.0-SNAPSHOT.war", 
+                            file: "target/dockeransible.war", 
                             type: 'war'
                         ]
                     ], 
