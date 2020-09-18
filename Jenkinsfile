@@ -28,8 +28,16 @@ pipeline{
             steps{
                 script{
 
-                    //def mavenPom = readMavenPom file: 'pom.xml'
+                    def mavenPom = readMavenPom file: 'pom.xml'
                    // def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "simpleapp-snapshot" : "simpleapp-release"
+		   filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    // Print some info from the artifact found
+                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    // Extract the path from the File found
+                    artifactPath = filesByGlob[0].path;
+                    // Assign to a boolean response verifying If the artifact name exists
+                    artifactExists = fileExists artifactPath;
+			echo "*** File: ${artifactExists}"	
                     nexusArtifactUploader artifacts: [
                         [
                             artifactId: 'dockeransible', 
