@@ -34,7 +34,7 @@ pipeline{
                         [
                             artifactId: 'dockeransible', 
                             classifier: '', 
-                            file: "target/dockeransible.war", 
+                            file: "target/dockeransible-1.0-SNAPSHOT.war", 
                             type: 'war'
                         ]
                     ], 
@@ -44,7 +44,7 @@ pipeline{
                     nexusVersion: 'nexus3', 
                     protocol: 'http', 
                     repository: 'myfirstprojectRepo', 
-                    version: '1'
+                    version: '1.0-SNAPSHOT'
                     }
             }
 			
