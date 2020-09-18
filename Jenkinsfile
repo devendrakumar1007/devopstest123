@@ -29,30 +29,32 @@ pipeline{
                 script{
 
                     def mavenPom = readMavenPom file: 'pom.xml'
-                   // def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "simpleapp-snapshot" : "simpleapp-release"
-		   filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                 // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
+                    pom = readMavenPom file: "pom.xml";
+                    // Find built artifact under target folder
+                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
                     // Print some info from the artifact found
                     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                     // Extract the path from the File found
                     artifactPath = filesByGlob[0].path;
                     // Assign to a boolean response verifying If the artifact name exists
                     artifactExists = fileExists artifactPath;
-			echo "*** File: ${artifactExists}"	
+			echo "artifact exist :  ${artifactExists}"
                     nexusArtifactUploader artifacts: [
                         [
-                            artifactId: 'dockeransible', 
+                            artifactId: pom.artifactId, 
                             classifier: '', 
-                            file: "target/dockeransible-1.0-SNAPSHOT.war", 
+                            file: artifactPath, 
                             type: 'war'
                         ]
                     ], 
                     credentialsId: 'nexus3', 
-                    groupId: 'in.javahome', 
+                    groupId: pom.groupId, 
                     nexusUrl: '192.168.205.10:8081', 
                     nexusVersion: 'nexus3', 
                     protocol: 'http', 
                     repository: 'myfirstprojectRepo', 
-                    version: '1.0-SNAPSHOT'
+                    version: pom.version
                     }
             }
 			
