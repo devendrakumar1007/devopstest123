@@ -24,7 +24,7 @@ pipeline{
             }
         }
         
-         stage('Upload War To Nexus'){
+             stage('Upload War To Nexus'){
             steps{
                 script{
 
@@ -47,6 +47,8 @@ pipeline{
                     version: "${mavenPom.version}"
                     }
             }
+			
+		}
         
         
         stage('Docker Build'){
