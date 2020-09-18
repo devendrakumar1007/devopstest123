@@ -44,7 +44,7 @@ pipeline{
                     nexusVersion: 'nexus3', 
                     protocol: 'http', 
                     repository: 'myfirstprojectRepo', 
-                    version: '1.0-SNAPSHOT'
+                    version: ''
                     }
             }
 			
