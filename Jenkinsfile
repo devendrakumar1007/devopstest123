@@ -53,7 +53,7 @@ pipeline{
         
         stage('Docker Build'){
             steps{
-                sh "docker build . -t kd31967/webapp:${DOCKER_TAG} "
+                sh "docker build . -t kd31967/dockeransible:${DOCKER_TAG} "
             }
         }
         // docker hub plugin install and set the password in for docker repository in jenkins credential
