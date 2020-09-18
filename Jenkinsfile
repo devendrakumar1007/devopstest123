@@ -6,6 +6,9 @@ pipeline{
     environment {
       DOCKER_TAG = getVersion()
     }
+    options {
+        buildDiscarder logRotator(daysToKeepStr: '5', numToKeepStr: '7')
+    }
     stages{
         stage('SCM'){
             steps{
@@ -17,8 +20,34 @@ pipeline{
         stage('Maven Build'){
             steps{
                 sh "mvn clean package"
+                 archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: true
             }
         }
+        
+         stage('Upload War To Nexus'){
+            steps{
+                script{
+
+                    def mavenPom = readMavenPom file: 'pom.xml'
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "simpleapp-snapshot" : "simpleapp-release"
+                    nexusArtifactUploader artifacts: [
+                        [
+                            artifactId: 'dockeransible', 
+                            classifier: '', 
+                            file: "target/dockeransible-${mavenPom.version}.war", 
+                            type: 'war'
+                        ]
+                    ], 
+                    credentialsId: 'nexus3', 
+                    groupId: 'in.javahome', 
+                    nexusUrl: '192.168.205.10:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: myfirstprojectRepo, 
+                    version: "${mavenPom.version}"
+                    }
+            }
+        
         
         stage('Docker Build'){
             steps{
@@ -32,7 +61,7 @@ pipeline{
                     sh "docker login -u kd31967 -p ${dockerHubPwd}"
                 }
                 
-                sh "docker push kd31967/webapp:${DOCKER_TAG} "
+                sh "docker push kd31967/dockeransible:${DOCKER_TAG} "
             }
         }
         
