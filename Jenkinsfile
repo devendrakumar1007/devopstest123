@@ -34,7 +34,7 @@ pipeline{
                         [
                             artifactId: 'dockeransible', 
                             classifier: '', 
-                            file: "target/dockeransible-${mavenPom.version}.war", 
+                            file: "target/dockeransible.war", 
                             type: 'war'
                         ]
                     ], 
@@ -44,7 +44,7 @@ pipeline{
                     nexusVersion: 'nexus3', 
                     protocol: 'http', 
                     repository: myfirstprojectRepo, 
-                    version: "${mavenPom.version}"
+                    version: "1"
                     }
             }
 			
