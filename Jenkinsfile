@@ -109,7 +109,7 @@ pipeline{
         
         stage('Docker Deploy'){
             steps{
-              ansiblePlaybook credentialsId: 'vagrant', disableHostKeyChecking: true, extras: "-e DOCKER_TAG=${DOCKER_TAG}", installation: 'ansible', inventory: 'dev.inv', playbook: 'dev_deploy.yml'
+              ansiblePlaybook credentialsId: 'vagrant', disableHostKeyChecking: true, extras: "-e DOCKER_TAG=${DOCKER_TAG}", installation: 'ansible', inventory: 'dev.inv', playbook: 'dev_deploy.yaml'
             sh "echo hi "
             
             }
