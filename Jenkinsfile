@@ -5,6 +5,16 @@ pipeline{
     }
     environment {
       DOCKER_TAG = getVersion()
+         // This can be nexus3 or nexus2
+        NEXUS_VERSION = "nexus3"
+        // This can be http or https
+        NEXUS_PROTOCOL = "http"
+        // Where your Nexus is running. 'nexus-3' is defined in the docker-compose file
+        NEXUS_URL = "192.168.205.10:8081"
+        // Repository where we will upload the artifact
+        NEXUS_REPOSITORY = "myfirstprojectRepo"
+        // Jenkins credential id to authenticate to Nexus OSS
+        NEXUS_CREDENTIAL_ID = "nexus3"
     }
     options {
         buildDiscarder logRotator(daysToKeepStr: '5', numToKeepStr: '7')
@@ -48,12 +58,12 @@ pipeline{
                             type: 'war'
                         ]
                     ], 
-                    credentialsId: 'nexus3', 
+                    credentialsId: NEXUS_CREDENTIAL_ID, 
                     groupId: pom.groupId, 
-                    nexusUrl: '192.168.205.10:8081', 
-                    nexusVersion: 'nexus3', 
-                    protocol: 'http', 
-                    repository: 'myfirstprojectRepo', 
+                    nexusUrl: NEXUS_URL, 
+                    nexusVersion: NEXUS_VERSION, 
+                    protocol: NEXUS_PROTOCOL, 
+                    repository: NEXUS_REPOSITORY, 
                     version: pom.version
                     }
             }
