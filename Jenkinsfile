@@ -11,7 +11,11 @@ pipeline{
         NEXUS_PROTOCOL = "http"
         // Where your Nexus is running. 'nexus-3' is defined in the docker-compose file
         NEXUS_URL = "192.168.205.10:8081"
-        // Repository where we will upload the artifact
+       // snapshot  nexus repository name 
+	NEXUS_REPOSITORY_SANPSHOT="myfirstprojectRepo" 
+	// Relese nexus repository name    
+	NEXUS_REPOSITORY_RELESE="myfirstprojectRepo-RELESE-REPOSITORY"  
+	// default snapshot repository name    
         NEXUS_REPOSITORY = "myfirstprojectRepo"
         // Jenkins credential id to authenticate to Nexus OSS
         NEXUS_CREDENTIAL_ID = "nexus3"
@@ -38,9 +42,11 @@ pipeline{
             steps{
                 script{
 
-                    def mavenPom = readMavenPom file: 'pom.xml'
+                   // def mavenPom = readMavenPom file: 'pom.xml'
                  // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
                     pom = readMavenPom file: "pom.xml";
+		    // if pom version contain snapshot then it will go snapshot nexus location other wise relese repository	
+		    NEXUS_REPOSITORY = pom.version.endsWith("SNAPSHOT") ? NEXUS_REPOSITORY_SANPSHOT : NEXUS_REPOSITORY_RELESE	
                     // Find built artifact under target folder
                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
                     // Print some info from the artifact found
@@ -52,6 +58,7 @@ pipeline{
 			echo "artifact exist :  ${artifactExists}"
 			
                    // Artifact generated such as .jar, .ear and .war files.
+		 if(artifactExists) {	
 			nexusArtifactUploader artifacts: [
                         [
                             artifactId: pom.artifactId, 
@@ -71,6 +78,9 @@ pipeline{
                     protocol: NEXUS_PROTOCOL, 
                     repository: NEXUS_REPOSITORY, 
                     version: pom.version
+		 } else {
+                        error "*** File: ${artifactPath}, could not be found";
+                    } 
                     }
             }
 			
