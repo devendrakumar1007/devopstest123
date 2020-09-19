@@ -1,3 +1,7 @@
+//Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
+// pipeline-utility-step plugin
+// nexusArtifactUploader plugin
+// dockerhub repository plugin
 pipeline{
     agent any
     tools {
