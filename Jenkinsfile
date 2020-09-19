@@ -50,13 +50,19 @@ pipeline{
                     // Assign to a boolean response verifying If the artifact name exists
                     artifactExists = fileExists artifactPath;
 			echo "artifact exist :  ${artifactExists}"
-                    nexusArtifactUploader artifacts: [
+			
+                   // Artifact generated such as .jar, .ear and .war files.
+			nexusArtifactUploader artifacts: [
                         [
                             artifactId: pom.artifactId, 
                             classifier: '', 
                             file: artifactPath, 
-                            type: 'war'
-                        ]
+                          type: pom.packaging],
+                                // Lets upload the pom.xml file for additional information for Transitive dependencies
+                                [artifactId: pom.artifactId,
+                                classifier: '',
+                                file: "pom.xml",
+                                type: "pom"]
                     ], 
                     credentialsId: NEXUS_CREDENTIAL_ID, 
                     groupId: pom.groupId, 
